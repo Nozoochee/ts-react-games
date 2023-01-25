@@ -1,24 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom';
+import Home from './pages/home';
+import About from './pages/about';
+import Games from './pages/games';
+import Twitch from './pages/twitch';
+import Other from './pages/other';
+import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
+import { CssBaseline, PaletteMode, ThemeProvider } from '@mui/material';
+import { createTheme } from '@mui/material/styles';
+import { themeSettings } from './theme';
+import { RootState } from '.';
 
 function App() {
+  const mode = useSelector((state:RootState) => state.mode) as PaletteMode;
+  const theme = useMemo(() => createTheme(themeSettings(mode)), [mode])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <BrowserRouter>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Routes>
+            <Route path="/" element={<Home/>} />
+            <Route path="/about" element={<About/>} />
+            <Route path="/games" element={<Games/>} />
+            <Route path="/search" element={<Twitch/>} />
+            <Route path="/other" element={<Other/>} />
+          </Routes>
+        </ThemeProvider>
+      </BrowserRouter>
     </div>
   );
 }
